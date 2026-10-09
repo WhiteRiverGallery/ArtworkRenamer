@@ -13,7 +13,7 @@
         input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
         button { background: #0076ff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
         button:hover { background: #0056b3; }
-        .unselected {display:none;}
+        .unselected {display:none; margin-bottom: 15px;}
     </style>
 </head>
 <body>
@@ -44,7 +44,7 @@
             <input type="number" id="width" placeholder="80cm" required>
         </div>
         <div class="form-group">
-            <label for="depth">Depth in Centimetres (If applicable):</label>
+            <label for="depth">Depth in Centimetres:</label>
             <input type="number" id="depth" placeholder="20cm" required>
         </div>
         <div class="form-group">
@@ -52,8 +52,8 @@
             <input type="checkbox" id="framed" placeholder="20cm" value="frame-price">
         </div>
         <div class="frame-price unselected">
-            <label for="framed">Frame Price:</label>
-            <input type="number" id="frameprice" placeholder="R3000" required>
+            <label for="frameprice">Frame Price:</label>
+            <input type="number" id="frameprice" placeholder="R3000" value="0" required>
         </div>
         <div class="form-group">
             <label for="price">Selling price in Rands:</label>
@@ -77,12 +77,11 @@
             const preview = document.getElementById('imagePreview');
 
             if (file) {
-                // Read the file locally and turn it into a temporary URL
                 preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block'; // Make the image visible
+                preview.style.display = 'block';
             } else {
                 preview.src = '';
-                preview.style.display = 'none';  // Hide it if file is removed
+                preview.style.display = 'none';
             }
         }
       
@@ -97,6 +96,8 @@
             const width = document.getElementById('width').value;
             const depth = document.getElementById('depth').value;
             const price = document.getElementById('price').value;
+            const framed = document.getElementById('framed').checked ? "Framed" : "Unframed";
+            const framePrice = document.getElementById('framed').checked ? document.getElementById('frameprice').value : "0";
 
             if (fileInput.files.length === 0) return;
 
@@ -111,7 +112,7 @@
             const safeLength = cleanString(length);
             const safeDepth = cleanString(depth);
             
-            const newFilename = `${safeName}-${safeYear}-${safeMedium}-${safeLength}cmx${safeWidth}cmx${safeDepth}cm-R${price}${extension}`;
+            const newFilename = `${safeName},${safeYear},${safeMedium},${safeLength}cmx${safeWidth}cmx${safeDepth}cm,${framed},R${price},R${framePrice}${extension}`;
 
             const blobUrl = URL.createObjectURL(originalFile);
             const downloadLink = document.createElement('a');
