@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White River Gallery</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; background: #f9f9f9; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #0076ff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h2>Artwork Renamer</h2>
+    <form id="renameForm">
+        <div class="form-group">
+            <label for="imageFile">Attach Image:</label>
+            <input type="file" id="imageFile" accept="image/*" required>
+        </div>
+        <div class="form-group">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" placeholder="The Old Guitarist" required>
+        </div>
+        <div class="form-group">
+            <label for="medium">Medium:</label>
+            <input type="text" id="itemName" placeholder="Oil on Canvas" required>
+        </div>
+        <div class="form-group">
+            <label for="dimensions">Length in Centimetres:</label>
+            <input type="number" id="length" placeholder="120cm" required>
+        </div>
+        <div class="form-group">
+            <label for="dimensions">Width in Centimetres:</label>
+            <input type="number" id="width" placeholder="80cm" required>
+        </div>
+        <div class="form-group">
+            <label for="dimensions">Depth in Centimetres (If applicable):</label>
+            <input type="number" id="depth" placeholder="20cm" required>
+        </div>
+        <div class="form-group">
+            <label for="framed">Framed:</label>
+            <input type="checkbox" id="framed" placeholder="20cm" required>
+        </div>
+        <div class="form-group">
+            <label for="framed">Frame Price:</label>
+            <input type="number" id="frameprice" placeholder="20cm" required>
+        </div>
+        <div class="form-group">
+            <label for="price">Selling price in Rands:</label>
+            <input type="number" id="price" placeholder="R3500" required>
+        </div>
+        <button type="submit">Rename & Download</button>
+    </form>
+
+    <script>
+        document.getElementById('renameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('imageFile');
+            const itemName = document.getElementById('itemName').value;
+            const dimensions = document.getElementById('dimensions').value;
+            const price = document.getElementById('price').value;
+
+            if (fileInput.files.length === 0) return;
+            const originalFile = fileInput.files[0];
+
+            const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
+
+            const cleanString = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-\$/g, '');
+            
+            const safeName = cleanString(itemName);
+            const safeDimensions = cleanString(dimensions);
+            
+            const newFilename = `${safeName}-${safeDimensions}-${price}${extension}`;
+
+            const blobUrl = URL.createObjectURL(originalFile);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.download = newFilename;
+            
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(blobUrl);
+        });
+    </script>
+</body>
+</html>
