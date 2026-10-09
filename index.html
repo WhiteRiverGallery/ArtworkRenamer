@@ -26,19 +26,23 @@
             <input type="text" id="itemName" placeholder="The Old Guitarist" required>
         </div>
         <div class="form-group">
-            <label for="medium">Medium:</label>
-            <input type="text" id="itemName" placeholder="Oil on Canvas" required>
+            <label for="year">Year:</label>
+            <input type="number" id="year" placeholder="2026" required>
         </div>
         <div class="form-group">
-            <label for="dimensions">Length in Centimetres:</label>
+            <label for="medium">Medium:</label>
+            <input type="text" id="medium" placeholder="Oil on Canvas" required>
+        </div>
+        <div class="form-group">
+            <label for="length">Length in Centimetres:</label>
             <input type="number" id="length" placeholder="120cm" required>
         </div>
         <div class="form-group">
-            <label for="dimensions">Width in Centimetres:</label>
+            <label for="width">Width in Centimetres:</label>
             <input type="number" id="width" placeholder="80cm" required>
         </div>
         <div class="form-group">
-            <label for="dimensions">Depth in Centimetres (If applicable):</label>
+            <label for="depth">Depth in Centimetres (If applicable):</label>
             <input type="number" id="depth" placeholder="20cm" required>
         </div>
         <div class="form-group">
@@ -47,11 +51,11 @@
         </div>
         <div class="form-group">
             <label for="framed">Frame Price:</label>
-            <input type="number" id="frameprice" placeholder="20cm" required>
+            <input type="number" id="frameprice" placeholder="R3000" required>
         </div>
         <div class="form-group">
             <label for="price">Selling price in Rands:</label>
-            <input type="number" id="price" placeholder="R3500" required>
+            <input type="number" id="price" placeholder="R35000" required>
         </div>
         <button type="submit">Rename & Download</button>
     </form>
@@ -62,20 +66,27 @@
 
             const fileInput = document.getElementById('imageFile');
             const itemName = document.getElementById('itemName').value;
-            const dimensions = document.getElementById('dimensions').value;
+            const year = document.getElementById('year').value;
+            const medium = document.getElementById('medium').value;            
+            const length = document.getElementById('length').value;
+            const width = document.getElementById('width').value;
+            const depth = document.getElementById('depth').value;
             const price = document.getElementById('price').value;
 
             if (fileInput.files.length === 0) return;
+
             const originalFile = fileInput.files[0];
-
             const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
-
             const cleanString = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-\$/g, '');
             
             const safeName = cleanString(itemName);
-            const safeDimensions = cleanString(dimensions);
+            const safeYear = cleanString(year);
+            const safeMedium = cleanString(medium);
+            const safeWidth = cleanString(width);
+            const safeLength = cleanString(length);
+            const safeDepth = cleanString(depth);
             
-            const newFilename = `${safeName}-${safeDimensions}-${price}${extension}`;
+            const newFilename = `${safeName}-${safeYear}-${safeMedium}-${safeLength}cmx${safeWidth}cmx${safeDepth}cm-R${price}${extension}`;
 
             const blobUrl = URL.createObjectURL(originalFile);
             const downloadLink = document.createElement('a');
