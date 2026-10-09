@@ -148,7 +148,7 @@
             const safeLength = cleanString(length);
             const safeDepth = cleanString(depth);
             
-            const newFilename = `${safeName},${safeYear},${safeMedium},${safeLength}cmx${safeWidth}cmx${safeDepth}cm,${framed},R${price},R${framePrice}${extension}`;
+            const newFilename = `${safeName},${safeYear},R${price},${safeMedium},${safeLength}cmx${safeWidth}cmx${safeDepth}cm,${framed},R${framePrice}${extension}`;
 
             const blobUrl = URL.createObjectURL(originalFile);
             const downloadLink = document.createElement('a');
