@@ -27,37 +27,37 @@
             <label for="itemName">Item Name:</label>
             <input type="text" id="itemName" placeholder="The Old Guitarist" required>
         </div>
-        <div class="form-group">
+        <div class="no-negative">
             <label for="year">Year:</label>
-            <input type="number" id="year" placeholder="2026" required>
+            <input type="number" id="year" placeholder="2026" min="0" required>
         </div>
         <div class="form-group">
             <label for="medium">Medium:</label>
             <input type="text" id="medium" placeholder="Oil on Canvas" required>
         </div>
-        <div class="form-group">
+        <div class="no-negative">
             <label for="length">Length in Centimetres:</label>
-            <input type="number" id="length" placeholder="120cm" required>
+            <input type="number" id="length" placeholder="120cm" min="0" required>
         </div>
-        <div class="form-group">
+        <div class="no-negative">
             <label for="width">Width in Centimetres:</label>
-            <input type="number" id="width" placeholder="80cm" required>
+            <input type="number" id="width" placeholder="80cm" min="0" required>
         </div>
-        <div class="form-group">
+        <div class="no-negative">
             <label for="depth">Depth in Centimetres:</label>
-            <input type="number" id="depth" placeholder="20cm" required>
+            <input type="number" id="depth" placeholder="20cm" min="0" required>
         </div>
         <div class="form-group">
             <label for="framed">Framed:</label>
-            <input type="checkbox" id="framed" placeholder="20cm" value="frame-price">
+            <input type="checkbox" id="framed" value="frame-price">
         </div>
         <div class="frame-price unselected">
             <label for="frameprice">Frame Price:</label>
-            <input type="number" id="frameprice" placeholder="R3000" required>
+            <input type="number" id="frameprice" placeholder="R3000" min="0" required>
         </div>
-        <div class="form-group">
+        <div class="no-negative">
             <label for="price">Selling price in Rands:</label>
-            <input type="number" id="price" placeholder="R35000" required>
+            <input type="number" id="price" placeholder="R35000" min="0" required>
         </div>
         <button type="submit">Rename & Download</button>
         <button type="button" onclick="clearForm()">Clear Form</button>
@@ -73,10 +73,62 @@
     </script>
 
     <script>
+      const yearInput = document.getElementById('year');
+      const currentYear = new Date().getFullYear();
+      if (yearInput)
+      {
+        yearInput.value = currentYear;
+      }
+
+      const positiveInputs = document.querySelectorAll('.no-negative');
+      // 2. Loop through each input and apply the rules
+      positiveInputs.forEach((input) => {
+        
+        // Prevent mousewheel changes
+        input.addEventListener('wheel', (evt) => {
+          evt.preventDefault();
+        });
+
+        // Block typing the minus sign (-) or 'e'
+        input.addEventListener('keydown', (evt) => {
+          if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+            evt.preventDefault();
+          }
+        });
+
+        // Block pasting negative numbers
+        input.addEventListener('paste', (evt) => {
+          const pasteData = evt.clipboardData.getData('text');
+          if (parseFloat(pasteData) < 0) {
+            evt.preventDefault();
+          }
+        });
+        
+      });
+
 
       const framedCheckbox = document.getElementById('framed');
-      const framePriceInput = document.getElementById('frameprice');
       const framePriceDiv = document.querySelector('.frame-price');
+
+      const framePriceInput = document.getElementById('frameprice');
+
+      framePriceInput.addEventListener('wheel', (evt) => {
+        evt.preventDefault();
+      });
+
+      framePriceInput.addEventListener('keydown', (evt) => {
+        if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+          evt.preventDefault();
+      }
+      });
+
+    // Block pasting negative numbers
+      framePriceInput.addEventListener('paste', (evt) => {
+        const pasteData = evt.clipboardData.getData('text');
+        if (parseFloat(pasteData) < 0) {
+          evt.preventDefault();
+        }
+      });
 
       // 2. Listen for when the user clicks the checkbox
       framedCheckbox.addEventListener('change', () => {
@@ -114,6 +166,13 @@
           framePrice.style.display = "none";
           framePrice.style.marginBottom = "15px";
           form.reset();
+
+          const yearInput = document.getElementById('year');
+          const currentYear = new Date().getFullYear();
+          if (yearInput)
+          {
+            yearInput.value = currentYear;
+          }
         };
         
         document.getElementById('renameForm').addEventListener('submit', function(e) {
