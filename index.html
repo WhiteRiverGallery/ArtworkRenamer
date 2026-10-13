@@ -11,7 +11,7 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
         input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { background: #0076ff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
+        button { background: #0076ff; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
         button:hover { background: #0056b3; }
         .unselected {display:none; margin-bottom: 15px;}        
     </style>
@@ -33,7 +33,7 @@
         </div>
         <div class="form-group">
             <label for="medium">Medium:</label>
-            <input type="text" id="medium" placeholder="Oil on Canvas" required>
+            <input type="text" id="medium" placeholder="Oil on Canvas" value="Oil on Canvas" required>
         </div>
         <div class="no-negative">
             <label for="length">Length in Centimetres:</label>
@@ -52,7 +52,7 @@
             <input type="checkbox" id="framed" value="frame-price">
         </div>
         <div class="frame-price unselected">
-            <label for="frameprice">Frame Price:</label>
+            <label for="frameprice">Frame price in Rands:</label>
             <input type="number" id="frameprice" placeholder="R3000" min="0" required>
         </div>
         <div class="no-negative">
@@ -81,145 +81,165 @@
       }
 
       const positiveInputs = document.querySelectorAll('.no-negative');
-      // 2. Loop through each input and apply the rules
-      positiveInputs.forEach((input) => {
-        
+      positiveInputs.forEach((input) =>
+      {        
         // Prevent mousewheel changes
-        input.addEventListener('wheel', (evt) => {
+        input.addEventListener('wheel', (evt) =>
+        {
           evt.preventDefault();
         });
 
         // Block typing the minus sign (-) or 'e'
-        input.addEventListener('keydown', (evt) => {
-          if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+        input.addEventListener('keydown', (evt) =>
+        {
+          if (evt.key === '-' || evt.key === 'e' || evt.key === 'E')
+          {
             evt.preventDefault();
           }
         });
 
         // Block pasting negative numbers
-        input.addEventListener('paste', (evt) => {
+        input.addEventListener('paste', (evt) =>
+        {
           const pasteData = evt.clipboardData.getData('text');
-          if (parseFloat(pasteData) < 0) {
+          if (parseFloat(pasteData) < 0)
+          {
             evt.preventDefault();
           }
-        });
-        
+        });        
       });
-
 
       const framedCheckbox = document.getElementById('framed');
       const framePriceDiv = document.querySelector('.frame-price');
-
       const framePriceInput = document.getElementById('frameprice');
 
-      framePriceInput.addEventListener('wheel', (evt) => {
+      framePriceInput.addEventListener('wheel', (evt) =>
+      { 
         evt.preventDefault();
       });
-
-      framePriceInput.addEventListener('keydown', (evt) => {
-        if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+      
+      framePriceInput.addEventListener('keydown', (evt) =>
+      {
+        if (evt.key === '-' || evt.key === 'e' || evt.key === 'E')
+        {
           evt.preventDefault();
-      }
+        }
       });
 
-    // Block pasting negative numbers
-      framePriceInput.addEventListener('paste', (evt) => {
+      // Block pasting negative numbers
+      framePriceInput.addEventListener('paste', (evt) =>
+      {
         const pasteData = evt.clipboardData.getData('text');
-        if (parseFloat(pasteData) < 0) {
+
+        if (parseFloat(pasteData) < 0)
+        {
           evt.preventDefault();
         }
       });
 
       // 2. Listen for when the user clicks the checkbox
-      framedCheckbox.addEventListener('change', () => {
-        if (framedCheckbox.checked) {
+      framedCheckbox.addEventListener('change', () =>
+      {
+        if (framedCheckbox.checked)
+        {
           // If checked: make it required and show the container
           framePriceInput.required = true;
           framePriceDiv.classList.remove('unselected');
-        } else {
+          framePriceInput.style.marginBottom = "15px";
+        }
+        else
+        {
           // If unchecked: remove required status and hide the container
           framePriceInput.required = false;
           framePriceDiv.classList.add('unselected');
-          framePriceInput.value = ''; // Optional: clear the value if they uncheck it
+          framePriceInput.style.marginBottom = "15px";
+          framePriceInput.value = '';
         }
       });
 
-        function previewImage(event) {
-            const file = event.target.files[0];
-            const preview = document.getElementById('imagePreview');
-
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-            } else {
-                preview.src = '';
-                preview.style.display = 'none';
-            }
-        }
-
-        const clearForm = () =>
-        {
-          const form = document.querySelector('form');
-          const framePrice = document.querySelector('.frame-price');
+      function previewImage(event)
+      {
+          const file = event.target.files[0];
           const preview = document.getElementById('imagePreview');
-          preview.style.display = 'none';
-          framePrice.style.display = "none";
-          framePrice.style.marginBottom = "15px";
-          form.reset();
 
-          const yearInput = document.getElementById('year');
-          const currentYear = new Date().getFullYear();
-          if (yearInput)
+          if (file)
           {
-            yearInput.value = currentYear;
+              preview.src = URL.createObjectURL(file);
+              preview.style.display = 'block';
           }
-        };
-        
-        document.getElementById('renameForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+          else
+          {
+              preview.src = '';
+              preview.style.display = 'none';
+          }
+      }
 
-            const fileInput = document.getElementById('imageInput');
-            const itemName = document.getElementById('itemName').value;
-            const year = document.getElementById('year').value;
-            const medium = document.getElementById('medium').value;            
-            const length = document.getElementById('length').value;
-            const width = document.getElementById('width').value;
-            const depth = document.getElementById('depth').value;
-            const price = document.getElementById('price').value;
-            const framed = document.getElementById('framed').checked ? "Framed" : "Unframed";
-            const framePrice = document.getElementById('framed').checked ? document.getElementById('frameprice').value : "0";
+      const clearForm = () =>
+      {
+        const form = document.querySelector('form');
+        const framePrice = document.querySelector('.frame-price');
+        const preview = document.getElementById('imagePreview');
+        preview.style.display = 'none';
+        framePrice.style.display = "none";
+        framePrice.style.marginBottom = "15px";
+        form.reset();
 
-            if (fileInput.files.length === 0) return;
+        const yearInput = document.getElementById('year');
+        const currentYear = new Date().getFullYear();
+        if (yearInput)
+        {
+          yearInput.value = currentYear;
+        }
+      };
+      
+      document.getElementById('renameForm').addEventListener('submit', function(e)
+      {
+          e.preventDefault();
 
-            const originalFile = fileInput.files[0];
-            const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
-            const cleanString = (str) => {
-              return str
-                .replace(/[^a-zA-Z0-9\s_-]/g, '')
-                .replace(/\s+/g, ' ')
-                .trim();
-            };
-            
-            const safeName = cleanString(itemName);
-            const safeYear = cleanString(year);
-            const safeMedium = cleanString(medium);
-            const safeWidth = cleanString(width);
-            const safeLength = cleanString(length);
-            const safeDepth = cleanString(depth);
-            
-            const newFilename = `${safeName},${safeYear},R${price},${safeMedium},${safeLength}cmx${safeWidth}cmx${safeDepth}cm,${framed},R${framePrice}${extension}`;
+          const fileInput = document.getElementById('imageInput');
+          const itemName = document.getElementById('itemName').value;
+          const year = document.getElementById('year').value;
+          const medium = document.getElementById('medium').value;            
+          const length = document.getElementById('length').value;
+          const width = document.getElementById('width').value;
+          const depth = document.getElementById('depth').value;
+          const price = document.getElementById('price').value;
+          const framed = document.getElementById('framed').checked ? "Framed" : "Unframed";
+          const framePrice = document.getElementById('framed').checked ? document.getElementById('frameprice').value : "0";
 
-            const blobUrl = URL.createObjectURL(originalFile);
-            const downloadLink = document.createElement('a');
-            downloadLink.href = blobUrl;
-            downloadLink.download = newFilename;
-            
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(blobUrl);
-        });
+          if (fileInput.files.length === 0)
+            return;
+
+          const originalFile = fileInput.files[0];
+          const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
+          const cleanString = (str) =>
+          {
+            return str
+              .replace(/[^a-zA-Z0-9\s_-]/g, '')
+              .replace(/\s+/g, ' ')
+              .trim();
+          };
+          
+          const safeName = cleanString(itemName);
+          const safeYear = cleanString(year);
+          const safeMedium = cleanString(medium);
+          const safeWidth = cleanString(width);
+          const safeLength = cleanString(length);
+          const safeDepth = cleanString(depth);
+          
+          const newFilename = `${safeName},${safeYear},R${price},${safeMedium},${safeLength}cmx${safeWidth}cmx${safeDepth}cm,${framed},R${framePrice}${extension}`;
+
+          const blobUrl = URL.createObjectURL(originalFile);
+          const downloadLink = document.createElement('a');
+          downloadLink.href = blobUrl;
+          downloadLink.download = newFilename;
+          
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          
+          document.body.removeChild(downloadLink);
+          URL.revokeObjectURL(blobUrl);
+      });
     </script>
 </body>
 </html>
