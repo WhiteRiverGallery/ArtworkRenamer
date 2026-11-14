@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artwork Renamer - White River Gallery</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; background: #ffffff; color: #333; }
         .form-group { margin-bottom: 15px; }
@@ -60,7 +62,11 @@
         <div class="form-group">
             <label for="itemImage">Item image:</label>
             <input type="file" id="imageInput" accept="image/*,android/force-camera-workaround" onchange="previewImage(event)" required>
-            <img id="imagePreview" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: 200px; margin-top: 15px; border-radius: 4px; border: 1px solid #ccc;">
+            <div style="max-width: 100%; margin-top: 15px;">
+                <img id="imagePreview" src="" alt="Image Preview" style="display: none; max-width: 100%;">
+            </div>
+            <button type="button" id="cropButton" style="display: none;" onclick="cropImage()">Crop Image</button>
+            <input type="hidden" id="croppedImageData" name="croppedImageData">
         </div>
         <div class="form-group">
             <label for="itemName">Item Name:</label>
@@ -217,21 +223,62 @@
         }
       });
 
-      function previewImage(event)
-      {
-          const file = event.target.files[0];
-          const preview = document.getElementById('imagePreview');
+      let cropper = null;
 
-          if (file)
-          {
-              preview.src = URL.createObjectURL(file);
-              preview.style.display = 'block';
-          }
-          else
-          {
-              preview.src = '';
-              preview.style.display = 'none';
-          }
+      function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('imagePreview');
+        const cropButton = document.getElementById('cropButton');
+    
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                cropButton.style.display = 'block';
+    
+                // Destroy the existing cropper if the user selects a new image
+                if (cropper) {
+                    cropper.destroy();
+                }
+    
+                // Initialize Cropper.js
+                cropper = new Cropper(preview, {
+                    aspectRatio: 1, // Change this (e.g., 16/9) or remove it for free-form cropping
+                    viewMode: 1,    // Restricts the crop box to not exceed the size of the canvas
+                });
+            };
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+      }
+    
+      function cropImage() {
+        if (!cropper) return;
+    
+        // Get the cropped image as a canvas
+        const canvas = cropper.getCroppedCanvas({
+            width: 800, // Optional: resize the output image
+            height: 800 // Optional: resize the output image
+        });
+    
+        // Convert canvas to Base64 data URL (JPEG format)
+        const croppedDataUrl = canvas.toDataURL('image/jpeg');
+    
+        // Update the preview image to show only the cropped portion
+        const preview = document.getElementById('imagePreview');
+        
+        // Destroy the cropper UI so the user just sees the final result
+        cropper.destroy();
+        cropper = null;
+        
+        // Set the preview and hide the crop button
+        preview.src = croppedDataUrl;
+        document.getElementById('cropButton').style.display = 'none';
+    
+        // Store the cropped image data in the hidden input for server submission
+        document.getElementById('croppedImageData').value = croppedDataUrl;
       }
 
       const clearForm = () =>
