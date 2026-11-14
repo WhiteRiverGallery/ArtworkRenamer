@@ -244,8 +244,8 @@
                 }
     
                 // Initialize Cropper.js
-                cropper = new Cropper(preview, {
-                    aspectRatio: 1, // Change this (e.g., 16/9) or remove it for free-form cropping
+                cropper = new Cropper(preview,
+                {
                     viewMode: 1,    // Restricts the crop box to not exceed the size of the canvas
                 });
             };
@@ -258,10 +258,7 @@
         if (!cropper) return;
     
         // Get the cropped image as a canvas
-        const canvas = cropper.getCroppedCanvas({
-            width: 800, // Optional: resize the output image
-            height: 800 // Optional: resize the output image
-        });
+        const canvas = cropper.getCroppedCanvas();
     
         // Convert canvas to Base64 data URL (JPEG format)
         const croppedDataUrl = canvas.toDataURL('image/jpeg');
