@@ -125,7 +125,13 @@
             <div style="max-width: 100%; margin-top: 15px;">
                 <img id="imagePreview" src="" alt="Image Preview" style="display: none; max-width: 100%;">
             </div>
-            <button type="button" id="cropButton" style="display: none;" onclick="cropImage()">Crop Image</button>
+            <div id="cropControls" style="display: none;">
+            <div style="display: flex; gap: 10px;">
+                <button type="button" onclick="rotateImage(-90)">&#8634; Rotate Left</button>
+                <button type="button" onclick="rotateImage(90)">&#8635; Rotate Right</button>
+            </div>
+            <button type="button" id="cropButton" onclick="cropImage()">Crop Image</button>
+        </div>
             <input type="hidden" id="croppedImageData" name="croppedImageData">
         </div>
         <div class="form-group">
@@ -260,11 +266,21 @@
 
         let cropper = null;
 
+        function rotateImage(degrees)
+        {
+            if (!cropper)
+            {
+                return;
+            }
+
+            cropper.rotate(degrees);
+        }
+
         function previewImage(event)
         {
             const input = event.target;
             const preview = document.getElementById('imagePreview');
-            const cropButton = document.getElementById('cropButton');
+            const cropControls = document.getElementById('cropControls');
 
             // Reset any previous cropped data when a new image is chosen
             document.getElementById('croppedImageData').value = '';
@@ -277,7 +293,7 @@
                 {
                     preview.src = e.target.result;
                     preview.style.display = 'block';
-                    cropButton.style.display = 'block';
+                    cropControls.style.display = 'block';
 
                     if (cropper)
                     {
@@ -303,7 +319,6 @@
 
             const fileInput = document.getElementById('imageInput');
             const originalFile = fileInput.files[0];
-            // Preserve PNG format if uploaded as PNG, otherwise default to high-quality JPEG
             const mimeType = (originalFile && originalFile.type === 'image/png') ? 'image/png' : 'image/jpeg';
 
             const canvas = cropper.getCroppedCanvas();
@@ -314,7 +329,7 @@
             cropper = null;
 
             preview.src = croppedDataUrl;
-            document.getElementById('cropButton').style.display = 'none';
+            document.getElementById('cropControls').style.display = 'none';
             document.getElementById('croppedImageData').value = croppedDataUrl;
         }
 
@@ -332,7 +347,7 @@
 
             preview.src = '';
             preview.style.display = 'none';
-            document.getElementById('cropButton').style.display = 'none';
+            document.getElementById('cropControls').style.display = 'none';
             document.getElementById('croppedImageData').value = '';
 
             framePrice.style.display = '';
