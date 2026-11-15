@@ -19,7 +19,8 @@
         .unselected {display:none; margin-bottom: 15px;}
         
         /* Toast Popup Container */
-        .toast-notification {
+        .toast-notification
+        {
             position: fixed;
             bottom: 30px;
             left: 50%;
@@ -41,7 +42,8 @@
         }
 
         /* Visible State triggered by JavaScript */
-        .toast-notification.show {
+        .toast-notification.show
+        {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
@@ -124,30 +126,39 @@
     <script>
   const yearInput = document.getElementById('year');
   const currentYear = new Date().getFullYear();
-  if (yearInput) {
+  if (yearInput)
+  {
     yearInput.value = currentYear;
   }
 
   const positiveInputs = document.querySelectorAll('.no-negative');
-  positiveInputs.forEach((input) => {
+  positiveInputs.forEach((input) =>
+  {
     input.addEventListener('wheel', (evt) => evt.preventDefault());
-    input.addEventListener('keydown', (evt) => {
-      if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+    input.addEventListener('keydown', (evt) =>
+    {
+      if (evt.key === '-' || evt.key === 'e' || evt.key === 'E')
+      {
         evt.preventDefault();
       }
     });
-    input.addEventListener('paste', (evt) => {
+
+    input.addEventListener('paste', (evt) =>
+    {
       const pasteData = evt.clipboardData.getData('text');
-      if (parseFloat(pasteData) < 0) {
+      if (parseFloat(pasteData) < 0)
+      {
         evt.preventDefault();
       }
     });
   });
 
-  function showToast() {
+  function showToast()
+  {
     const toast = document.getElementById('downloadToast');
     toast.classList.add('show');
-    setTimeout(() => {
+    setTimeout(() =>
+    {
       toast.classList.remove('show');
     }, 3000);
   }
@@ -157,24 +168,32 @@
   const framePriceInput = document.getElementById('frameprice');
 
   framePriceInput.addEventListener('wheel', (evt) => evt.preventDefault());
-  framePriceInput.addEventListener('keydown', (evt) => {
-    if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+  framePriceInput.addEventListener('keydown', (evt) =>
+  {
+    if (evt.key === '-' || evt.key === 'e' || evt.key === 'E')
+    {
       evt.preventDefault();
     }
   });
-  framePriceInput.addEventListener('paste', (evt) => {
+
+  framePriceInput.addEventListener('paste', (evt) =>
+  {
     const pasteData = evt.clipboardData.getData('text');
     if (parseFloat(pasteData) < 0) {
       evt.preventDefault();
     }
   });
 
-  framedCheckbox.addEventListener('change', () => {
-    if (framedCheckbox.checked) {
+  framedCheckbox.addEventListener('change', () =>
+  {
+    if (framedCheckbox.checked)
+    {
       framePriceInput.required = true;
       framePriceDiv.classList.remove('unselected');
       framePriceInput.style.marginBottom = "15px";
-    } else {
+    }
+    else
+    {
       framePriceInput.required = false;
       framePriceDiv.classList.add('unselected');
       framePriceInput.style.marginBottom = "15px";
@@ -192,19 +211,23 @@
     // Reset any previous cropped data when a new image is chosen
     document.getElementById('croppedImageData').value = '';
 
-    if (input.files && input.files[0]) {
+    if (input.files && input.files[0])
+    {
       const reader = new FileReader();
 
-      reader.onload = function(e) {
+      reader.onload = function(e)
+      {
         preview.src = e.target.result;
         preview.style.display = 'block';
         cropButton.style.display = 'block';
 
-        if (cropper) {
+        if (cropper)
+        {
           cropper.destroy();
         }
 
-        cropper = new Cropper(preview, {
+        cropper = new Cropper(preview,
+        {
           viewMode: 1,
         });
       };
@@ -213,8 +236,10 @@
     }
   }
 
-  function cropImage() {
-    if (!cropper) return;
+  function cropImage()
+  {
+    if (!cropper)
+      return;
 
     const fileInput = document.getElementById('imageInput');
     const originalFile = fileInput.files[0];
@@ -233,12 +258,14 @@
     document.getElementById('croppedImageData').value = croppedDataUrl;
   }
 
-  const clearForm = () => {
+  const clearForm = () =>
+  {
     const form = document.querySelector('form');
     const framePrice = document.querySelector('.frame-price');
     const preview = document.getElementById('imagePreview');
 
-    if (cropper) {
+    if (cropper)
+    {
       cropper.destroy();
       cropper = null;
     }
@@ -252,19 +279,25 @@
     framePriceInput.required = false;
     form.reset();
 
-    if (yearInput) {
+    if (yearInput)
+    {
       yearInput.value = new Date().getFullYear();
     }
   };
 
-  document.getElementById('renameForm').addEventListener('submit', function(e) {
+  document.getElementById('renameForm').addEventListener('submit', function(e)
+  {
     e.preventDefault();
 
     const fileInput = document.getElementById('imageInput');
-    if (fileInput.files.length === 0) return;
+    if (fileInput.files.length === 0)
+    {
+      return;
+    }
 
     // If the user didn't click "Crop Image" before submitting, apply the active crop now
-    if (cropper) {
+    if (cropper)
+    {
       cropImage();
     }
 
@@ -280,7 +313,8 @@
 
     const originalFile = fileInput.files[0];
     const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
-    const cleanString = (str) => {
+    const cleanString = (str) =>
+    {
       return str
         .replace(/[\\/:*?"<>|]/g, '')
         .replace(/\s+/g, ' ')
@@ -309,7 +343,8 @@
     showToast();
 
     document.body.removeChild(downloadLink);
-    if (!croppedDataUrl) {
+    if (!croppedDataUrl)
+    {
       URL.revokeObjectURL(downloadHref);
     }
   });
