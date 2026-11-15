@@ -122,229 +122,197 @@
     </script>
 
     <script>
-      const yearInput = document.getElementById('year');
-      const currentYear = new Date().getFullYear();
-      if (yearInput)
-      {
-        yearInput.value = currentYear;
-      }
+  const yearInput = document.getElementById('year');
+  const currentYear = new Date().getFullYear();
+  if (yearInput) {
+    yearInput.value = currentYear;
+  }
 
-      const positiveInputs = document.querySelectorAll('.no-negative');
-      positiveInputs.forEach((input) =>
-      {        
-        // Prevent mousewheel changes
-        input.addEventListener('wheel', (evt) =>
-        {
-          evt.preventDefault();
-        });
-
-        // Block typing the minus sign (-) or 'e'
-        input.addEventListener('keydown', (evt) =>
-        {
-          if (evt.key === '-' || evt.key === 'e' || evt.key === 'E')
-          {
-            evt.preventDefault();
-          }
-        });
-
-        // Block pasting negative numbers
-        input.addEventListener('paste', (evt) =>
-        {
-          const pasteData = evt.clipboardData.getData('text');
-          if (parseFloat(pasteData) < 0)
-          {
-            evt.preventDefault();
-          }
-        });        
-      });
-
-      const downloadButton = document.querySelector('.DownloadButton');
-      downloadButton.addEventListener('click', (evt) =>
-      {
-          //showToast();
-      });
-
-      function showToast()
-      {
-          const toast = document.getElementById('downloadToast');
-          toast.classList.add('show');
-
-          setTimeout(() =>
-          {
-              toast.classList.remove('show');
-          }, 3000);
-      }
-
-      const framedCheckbox = document.getElementById('framed');
-      const framePriceDiv = document.querySelector('.frame-price');
-      const framePriceInput = document.getElementById('frameprice');
-
-      framePriceInput.addEventListener('wheel', (evt) =>
-      { 
+  const positiveInputs = document.querySelectorAll('.no-negative');
+  positiveInputs.forEach((input) => {
+    input.addEventListener('wheel', (evt) => evt.preventDefault());
+    input.addEventListener('keydown', (evt) => {
+      if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
         evt.preventDefault();
-      });
-      
-      framePriceInput.addEventListener('keydown', (evt) =>
-      {
-        if (evt.key === '-' || evt.key === 'e' || evt.key === 'E')
-        {
-          evt.preventDefault();
-        }
-      });
-
-      // Block pasting negative numbers
-      framePriceInput.addEventListener('paste', (evt) =>
-      {
-        const pasteData = evt.clipboardData.getData('text');
-
-        if (parseFloat(pasteData) < 0)
-        {
-          evt.preventDefault();
-        }
-      });
-
-      // 2. Listen for when the user clicks the checkbox
-      framedCheckbox.addEventListener('change', () =>
-      {
-        if (framedCheckbox.checked)
-        {
-          // If checked: make it required and show the container
-          framePriceInput.required = true;
-          framePriceDiv.classList.remove('unselected');
-          framePriceInput.style.marginBottom = "15px";
-        }
-        else
-        {
-          // If unchecked: remove required status and hide the container
-          framePriceInput.required = false;
-          framePriceDiv.classList.add('unselected');
-          framePriceInput.style.marginBottom = "15px";
-          framePriceInput.value = '';
-        }
-      });
-
-      let cropper = null;
-
-      function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('imagePreview');
-        const cropButton = document.getElementById('cropButton');
-    
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                cropButton.style.display = 'block';
-    
-                // Destroy the existing cropper if the user selects a new image
-                if (cropper) {
-                    cropper.destroy();
-                }
-    
-                // Initialize Cropper.js
-                cropper = new Cropper(preview,
-                {
-                    viewMode: 1,    // Restricts the crop box to not exceed the size of the canvas
-                });
-            };
-            
-            reader.readAsDataURL(input.files[0]);
-        }
       }
-    
-      function cropImage() {
-        if (!cropper) return;
-    
-        // Get the cropped image as a canvas
-        const canvas = cropper.getCroppedCanvas();
-    
-        // Convert canvas to Base64 data URL (JPEG format)
-        const croppedDataUrl = canvas.toDataURL('image/jpeg');
-    
-        // Update the preview image to show only the cropped portion
-        const preview = document.getElementById('imagePreview');
-        
-        // Destroy the cropper UI so the user just sees the final result
-        cropper.destroy();
-        cropper = null;
-        
-        // Set the preview and hide the crop button
-        preview.src = croppedDataUrl;
-        document.getElementById('cropButton').style.display = 'none';
-    
-        // Store the cropped image data in the hidden input for server submission
-        document.getElementById('croppedImageData').value = croppedDataUrl;
+    });
+    input.addEventListener('paste', (evt) => {
+      const pasteData = evt.clipboardData.getData('text');
+      if (parseFloat(pasteData) < 0) {
+        evt.preventDefault();
       }
+    });
+  });
 
-      const clearForm = () =>
-      {
-        const form = document.querySelector('form');
-        const framePrice = document.querySelector('.frame-price');
-        const preview = document.getElementById('imagePreview');
-        preview.style.display = 'none';
-        framePrice.style.display = "none";
-        framePrice.style.marginBottom = "15px";
-        form.reset();
+  function showToast() {
+    const toast = document.getElementById('downloadToast');
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
 
-        const yearInput = document.getElementById('year');
-        const currentYear = new Date().getFullYear();
-        if (yearInput)
-        {
-          yearInput.value = currentYear;
+  const framedCheckbox = document.getElementById('framed');
+  const framePriceDiv = document.querySelector('.frame-price');
+  const framePriceInput = document.getElementById('frameprice');
+
+  framePriceInput.addEventListener('wheel', (evt) => evt.preventDefault());
+  framePriceInput.addEventListener('keydown', (evt) => {
+    if (evt.key === '-' || evt.key === 'e' || evt.key === 'E') {
+      evt.preventDefault();
+    }
+  });
+  framePriceInput.addEventListener('paste', (evt) => {
+    const pasteData = evt.clipboardData.getData('text');
+    if (parseFloat(pasteData) < 0) {
+      evt.preventDefault();
+    }
+  });
+
+  framedCheckbox.addEventListener('change', () => {
+    if (framedCheckbox.checked) {
+      framePriceInput.required = true;
+      framePriceDiv.classList.remove('unselected');
+      framePriceInput.style.marginBottom = "15px";
+    } else {
+      framePriceInput.required = false;
+      framePriceDiv.classList.add('unselected');
+      framePriceInput.style.marginBottom = "15px";
+      framePriceInput.value = '';
+    }
+  });
+
+  let cropper = null;
+
+  function previewImage(event) {
+    const input = event.target;
+    const preview = document.getElementById('imagePreview');
+    const cropButton = document.getElementById('cropButton');
+
+    // Reset any previous cropped data when a new image is chosen
+    document.getElementById('croppedImageData').value = '';
+
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        cropButton.style.display = 'block';
+
+        if (cropper) {
+          cropper.destroy();
         }
+
+        cropper = new Cropper(preview, {
+          viewMode: 1,
+        });
       };
-      
-      document.getElementById('renameForm').addEventListener('submit', function(e)
-      {
-          e.preventDefault();
 
-          const fileInput = document.getElementById('imageInput');
-          const itemName = document.getElementById('itemName').value;
-          const year = document.getElementById('year').value;
-          const medium = document.getElementById('medium').value;            
-          const length = document.getElementById('length').value;
-          const width = document.getElementById('width').value;
-          const depth = document.getElementById('depth').value;
-          const price = document.getElementById('price').value;
-          const framed = document.getElementById('framed').checked ? "Framed" : "Unframed";
-          const framePrice = document.getElementById('framed').checked ? document.getElementById('frameprice').value : "0";
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
 
-          if (fileInput.files.length === 0)
-            return;
+  function cropImage() {
+    if (!cropper) return;
 
-          const originalFile = fileInput.files[0];
-          const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
-          const cleanString = (str) =>
-          {
-            return str
-              .replace(/[\\/:*?"<>|]/g, '') // Removes illegal Windows characters completely
-              .replace(/\s+/g, ' ') // Collapses spaces
-              .trim();
-          };
-          
-          const safeName = cleanString(itemName);
-          const safeYear = cleanString(year);
-          const safeMedium = cleanString(medium);
-          const safeWidth = cleanString(width);
-          const safeLength = cleanString(length);
-          const safeDepth = cleanString(depth);
-          
-          const newFilename = `${safeName}•${safeYear}•R${price}•${safeMedium}•${safeLength}cmx${safeWidth}cmx${safeDepth}cm•${framed}•R${framePrice}•${extension}`;
+    const fileInput = document.getElementById('imageInput');
+    const originalFile = fileInput.files[0];
+    // Preserve PNG format if uploaded as PNG, otherwise default to high-quality JPEG
+    const mimeType = (originalFile && originalFile.type === 'image/png') ? 'image/png' : 'image/jpeg';
 
-          const blobUrl = URL.createObjectURL(originalFile);
-          const downloadLink = document.createElement('a');
-          downloadLink.href = blobUrl;
-          downloadLink.download = newFilename;
-          
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          showToast();
-          
-          document.body.removeChild(downloadLink);
-          URL.revokeObjectURL(blobUrl);
-      });
-    </script>
+    const canvas = cropper.getCroppedCanvas();
+    const croppedDataUrl = canvas.toDataURL(mimeType, 0.92);
+
+    const preview = document.getElementById('imagePreview');
+    cropper.destroy();
+    cropper = null;
+
+    preview.src = croppedDataUrl;
+    document.getElementById('cropButton').style.display = 'none';
+    document.getElementById('croppedImageData').value = croppedDataUrl;
+  }
+
+  const clearForm = () => {
+    const form = document.querySelector('form');
+    const framePrice = document.querySelector('.frame-price');
+    const preview = document.getElementById('imagePreview');
+
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
+    preview.src = '';
+    preview.style.display = 'none';
+    document.getElementById('cropButton').style.display = 'none';
+    document.getElementById('croppedImageData').value = '';
+
+    framePrice.classList.add('unselected');
+    framePriceInput.required = false;
+    form.reset();
+
+    if (yearInput) {
+      yearInput.value = new Date().getFullYear();
+    }
+  };
+
+  document.getElementById('renameForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById('imageInput');
+    if (fileInput.files.length === 0) return;
+
+    // If the user didn't click "Crop Image" before submitting, apply the active crop now
+    if (cropper) {
+      cropImage();
+    }
+
+    const itemName = document.getElementById('itemName').value;
+    const year = document.getElementById('year').value;
+    const medium = document.getElementById('medium').value;
+    const length = document.getElementById('length').value;
+    const width = document.getElementById('width').value;
+    const depth = document.getElementById('depth').value;
+    const price = document.getElementById('price').value;
+    const framed = document.getElementById('framed').checked ? "Framed" : "Unframed";
+    const framePrice = document.getElementById('framed').checked ? document.getElementById('frameprice').value : "0";
+
+    const originalFile = fileInput.files[0];
+    const extension = originalFile.name.substring(originalFile.name.lastIndexOf('.'));
+    const cleanString = (str) => {
+      return str
+        .replace(/[\\/:*?"<>|]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+
+    const safeName = cleanString(itemName);
+    const safeYear = cleanString(year);
+    const safeMedium = cleanString(medium);
+    const safeWidth = cleanString(width);
+    const safeLength = cleanString(length);
+    const safeDepth = cleanString(depth);
+
+    const newFilename = `${safeName}•${safeYear}•R${price}•${safeMedium}•${safeLength}cmx${safeWidth}cmx${safeDepth}cm•${framed}•R${framePrice}•${extension}`;
+
+    // Use the cropped Data URL if available, otherwise fall back to the original file
+    const croppedDataUrl = document.getElementById('croppedImageData').value;
+    const downloadHref = croppedDataUrl ? croppedDataUrl : URL.createObjectURL(originalFile);
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = downloadHref;
+    downloadLink.download = newFilename;
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    showToast();
+
+    document.body.removeChild(downloadLink);
+    if (!croppedDataUrl) {
+      URL.revokeObjectURL(downloadHref);
+    }
+  });
+</script>
 </body>
 </html>
